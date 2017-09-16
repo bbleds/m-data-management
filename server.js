@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // handle views
-app.set('views', path.join(__dirname, './server/views'));
+app.set('views', path.join(__dirname, './server/app/views'));
 app.set('view engine', 'ejs');
 
 // passport middleware
