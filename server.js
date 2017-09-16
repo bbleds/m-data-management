@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const path = require('path');
+const engines = require('consolidate');
 
 // load in custom dependencies
 const dbConf = require('./config/database.js');
@@ -18,12 +19,14 @@ const dbConf = require('./config/database.js');
 const app = express();
 let port = process.env.PORT || 3001;
 mongoose.connect(dbConf.url, {useMongoClient: true});
-// require('./config/passport')(passport);
+require('./config/passport')(passport);
 
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'views')));
+
+app.set('view engine', 'ejs');
 
 // passport middleware
 app.use(session({ secret: 'jshero' }));
