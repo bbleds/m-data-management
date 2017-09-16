@@ -1,17 +1,17 @@
 "use strict";
 
 // routing middleware
-function isLoggedIn(req, res, next) {
+let isLoggedIn = (req, res, next) => {
+  // continue if user is authenticated
+  if (req.isAuthenticated()) { return next(); }
 
-    // if user is authenticated in the session, carry on
-    if (req.isAuthenticated()) { return next(); }
+  // if they aren't redirect them to the home page
+  res.redirect('/');
+};
 
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-}
-
-
+// expose routes to app
 module.exports = (app, passport) => {
+
   // home
   app.get('/', (req, res) => {
     res.render('index.ejs');
@@ -21,9 +21,6 @@ module.exports = (app, passport) => {
   app.get('/login', (req,res) => {
     res.render('login.ejs', {message: req.flash('loginMessage')});
   });
-
-  // process the login form
-  // app.post('/login', do all our passport stuff here);
 
   // show the signup form
   app.get('/signup', (req, res)=> {
@@ -45,8 +42,7 @@ module.exports = (app, passport) => {
     failureFlash : true
   }));
 
-  // we will want this protected so you have to be logged in to visit
-  // we will use route middleware to verify this (the isLoggedIn function)
+  // process main app page request
   app.get('/app', isLoggedIn, (req, res) => {
       res.render('app.ejs');
   });
