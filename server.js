@@ -13,29 +13,30 @@ const path = require('path');
 const engines = require('consolidate');
 
 // load in custom dependencies
-const dbConf = require('./config/database.js');
+const dbConf = require('./server/config/database.js');
 
 // configure app and middleware
 const app = express();
 let port = process.env.PORT || 3001;
 mongoose.connect(dbConf.url, {useMongoClient: true});
-require('./config/passport')(passport);
+require('./server/config/passport')(passport);
 
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'views')));
 
+// handle views
+app.set('views', path.join(__dirname, './server/views'));
 app.set('view engine', 'ejs');
 
 // passport middleware
-app.use(session({ secret: 'jshero' }));
+app.use(session({ secret: 'my-session-secret' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
 // handle routing
-require('./app/routes.js')(app, passport);
+require('./server/app/routes.js')(app, passport);
 
 // spin up app
 app.listen(port);
