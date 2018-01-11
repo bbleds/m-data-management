@@ -3,9 +3,9 @@
 // routing middleware
 let isLoggedIn = (req, res, next) => {
   // continue if user is authenticated
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) return next();
 
-  // if they aren't redirect them to the home page
+  // if they aren't redirected them to the home page
   res.redirect('/');
 };
 
